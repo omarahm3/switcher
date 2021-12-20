@@ -66,6 +66,20 @@ pub fn get() -> Config {
     read_config_file(config_path)
 }
 
+pub fn print() {
+    let config = get();
+    let projects = config.projects;
+
+    println!("Projects:");
+    for project in projects.iter() {
+        let path = match project.path.to_str() {
+            None => "N/A",
+            Some(path) => path,
+        };
+        println!("\t{}\t\t{}", project.name, path);
+    }
+}
+
 fn read_config_file(path: PathBuf) -> Config {
     let mut file = match fs::File::open(path) {
         Err(err) => panic!("Error reading config file [{}]", err),

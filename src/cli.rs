@@ -6,12 +6,14 @@ use std::process::exit;
 pub enum CliCommand {
     Help,
     Add,
+    Config,
 }
 
 impl CliCommand {
     fn command(cmd: &str) -> CliCommand {
         match cmd {
             "add_project" => CliCommand::Add,
+            "config" => CliCommand::Config,
             "help" => CliCommand::Help,
             _ => CliCommand::Help,
         }

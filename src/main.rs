@@ -12,19 +12,13 @@ use crate::commands::projects;
  */
 
 fn main() {
-    println!("");
-    println!("");
-    println!("");
-    println!("");
-    println!("");
     config::init();
 
     let program_info = get_program_info();
 
-    println!("Program info: [{:?}]", program_info);
-
     match program_info.command {
         CliCommand::Help => println!("You want help!?"),
         CliCommand::Add => projects::add(program_info),
+        CliCommand::Config => config::print(),
     }
 }
