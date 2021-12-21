@@ -13,6 +13,7 @@ const CONFIG_INIT: &str = r#"
 pub struct Project {
     pub name: String,
     pub path: PathBuf,
+    pub repositories: Vec<PathBuf>
 }
 
 impl Project {
@@ -20,6 +21,7 @@ impl Project {
         Project {
             name: name.to_string(),
             path: path.to_path_buf(),
+            repositories: Vec::new()
         }
     }
 }
@@ -48,6 +50,10 @@ impl Config {
             Err(err) => panic!("Error writing to config file: [{}]", err),
             Ok(_) => {}
         }
+    }
+
+    pub fn get_project(&mut self, project_name: &String) -> Option<&mut Project> {
+        self.projects.iter_mut().find(|project| project.name == *project_name)
     }
 }
 

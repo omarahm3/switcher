@@ -1,14 +1,17 @@
 mod commands;
 mod cli;
 mod config;
+mod git;
 
 use crate::cli::get_program_info;
 use crate::cli::CliCommand;
 use crate::commands::projects;
 
 /**
- * switcher add project <PROJECT_NAME> <PATH> ----->> path is optional
- * switcher add project <PROJECT_NAME> ---->> then we just add current directory
+ * switcher add_project <PROJECT_NAME> <PATH> ----->> path is optional
+ * switcher add_project <PROJECT_NAME> ---->> then we just add current directory
+ * switcher config
+ * switcher setup <PROJECT_NAME>
  */
 
 fn main() {
@@ -19,6 +22,7 @@ fn main() {
     match program_info.command {
         CliCommand::Help => println!("You want help!?"),
         CliCommand::Add => projects::add(program_info),
+        CliCommand::Setup => projects::setup(program_info),
         CliCommand::Config => config::print(),
     }
 }

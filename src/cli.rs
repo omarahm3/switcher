@@ -7,6 +7,7 @@ pub enum CliCommand {
     Help,
     Add,
     Config,
+    Setup,
 }
 
 impl CliCommand {
@@ -14,6 +15,7 @@ impl CliCommand {
         match cmd {
             "add_project" => CliCommand::Add,
             "config" => CliCommand::Config,
+            "setup" => CliCommand::Setup,
             "help" => CliCommand::Help,
             _ => CliCommand::Help,
         }
