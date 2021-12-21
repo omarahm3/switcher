@@ -1,6 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
-use std::process::{Command};
+use std::process::Command;
 
 pub fn get_repositories(path: &PathBuf) -> Vec<PathBuf> {
     let mut repositories: Vec<PathBuf> = Vec::new();
