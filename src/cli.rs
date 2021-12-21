@@ -8,15 +8,17 @@ pub enum CliCommand {
     Add,
     Config,
     Setup,
+    Branch,
 }
 
 impl CliCommand {
     fn command(cmd: &str) -> CliCommand {
         match cmd {
+            "help" => CliCommand::Help,
             "add_project" => CliCommand::Add,
             "config" => CliCommand::Config,
             "setup" => CliCommand::Setup,
-            "help" => CliCommand::Help,
+            "branch" => CliCommand::Branch,
             _ => CliCommand::Help,
         }
     }

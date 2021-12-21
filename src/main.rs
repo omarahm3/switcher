@@ -12,6 +12,7 @@ use crate::commands::projects;
  * switcher add_project <PROJECT_NAME> ---->> then we just add current directory
  * switcher config
  * switcher setup <PROJECT_NAME>
+ * switcher branch <PROJECT_NAME> <BRANCH>
  */
 
 fn main() {
@@ -23,6 +24,7 @@ fn main() {
         CliCommand::Help => println!("You want help!?"),
         CliCommand::Add => projects::add(program_info),
         CliCommand::Setup => projects::setup(program_info),
+        CliCommand::Branch => projects::sync_projects(program_info),
         CliCommand::Config => config::print(),
     }
 }

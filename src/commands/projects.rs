@@ -47,6 +47,58 @@ impl AddProject {
     }
 }
 
+struct SyncProjectBranch {
+    name: String,
+    branch: String,
+}
+
+impl SyncProjectBranch {
+    fn init(program: &ProgramInfo) -> SyncProjectBranch {
+        let args = &program.args;
+        let args = match args {
+            None => {
+                println!("You must specify at least the name of the project");
+                exit(1);
+            },
+            Some(args) => args
+        };
+
+        if args.len() == 0 {
+            println!("You must specify project name and branch");
+            exit(1);
+        }
+
+        let name = match args.get(0) {
+            None => panic!("Project name can't be empty"),
+            Some(name) => name,
+        };
+
+        let branch = match args.get(1) {
+            None => panic!("You must enter branch name as second argument"),
+            Some(branch) => branch,
+        };
+
+        SyncProjectBranch {
+            name: name.to_string(),
+            branch: branch.to_string(),
+        }
+    }
+}
+
+pub fn sync_projects(program: ProgramInfo) {
+    let mut config = config::get();
+    let params = SyncProjectBranch::init(&program);
+    let project = match config.get_project(&params.name) {
+        None => {
+            println!("Unable to find project [{}] please consider runnnig 'add_project {} <|PATH>'", &params.name, &params.name);
+            exit(1);
+        },
+        Some(project) => project,
+    };
+    let repositories = &project.repositories;
+    git::sync_repositories_to_branch(&repositories.to_vec(), &params.branch);
+}
+
 pub fn setup(program: ProgramInfo) {
     let mut config = config::get();
 
