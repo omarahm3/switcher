@@ -58,11 +58,7 @@ impl Config {
 }
 
 pub fn init() {
-    println!("config::init:: initializing config");
-
     let config_path = get_config_path();
-
-    println!("Config path: {:?}", config_path);
 
     handle_config_file(&config_path);
 }
@@ -75,7 +71,13 @@ pub fn get() -> Config {
 pub fn print() {
     let config = get();
     let projects = config.projects;
+    let config_path = get_config_path();
+    let path = match config_path.to_str() {
+        None => panic!("Cannot get config path"),
+        Some(path) => path,
+    };
 
+    println!("Config path: [{}]", path);
     println!("Projects:");
     for project in projects.iter() {
         let path = match project.path.to_str() {
@@ -83,6 +85,20 @@ pub fn print() {
             Some(path) => path,
         };
         println!("\t{}\t\t{}", project.name, path);
+        println!("\tRepositories");
+        
+        for repository in project.repositories.iter() {
+            let path = repository.clone();
+            let filename = match path.file_name() {
+                None => panic!("Error getting repository name from path"),
+                Some(name) => name,
+            };
+            let name = match filename.to_str() {
+                None => panic!("Cannot convert repository name to string"),
+                Some(name) => name,
+            };
+            println!("\t\t\t\t{}", name);
+        }
     }
 }
 
