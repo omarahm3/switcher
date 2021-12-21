@@ -36,6 +36,9 @@ pub fn sync_repositories_to_branch(repositories: &Vec<PathBuf>, branch: &String)
         println!("\t!> Running git fetch");
         git_fetch(repository.to_path_buf());
 
+        println!("\t!> Running git stash");
+        git_stash(repository.to_path_buf());
+
         println!("\t!> Running git checkout {}", &branch);
         git_checkout(repository.to_path_buf(), branch.to_string());
         println!("\n");
@@ -81,3 +84,9 @@ fn git_fetch(repository: PathBuf) {
     run_command(command, args, repository);
 }
 
+fn git_stash(repository: PathBuf) {
+    // TODO save unique stash message
+    let command_string = "git stash save 'switcher:: changes'";
+    let (command, args) = build_command(command_string);
+    run_command(command, args, repository);
+}
