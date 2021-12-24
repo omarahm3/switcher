@@ -8,8 +8,7 @@ use crate::cli::CliCommand;
 use crate::commands::projects;
 
 /**
- * switcher add_project <PROJECT_NAME> <PATH> ----->> path is optional
- * switcher add_project <PROJECT_NAME> ---->> then we just add current directory
+ * switcher project add <PROJECT_NAME> <|PROJECT_PATH>
  * switcher config <|detail|d>
  * switcher setup <PROJECT_NAME>
  * switcher branch <PROJECT_NAME> <BRANCH>

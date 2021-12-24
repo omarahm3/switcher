@@ -87,6 +87,7 @@ struct ProjectInfo {
 #[derive(Debug)]
 enum ProjectCommand {
     Add,
+    Remove,
     Help,
 }
 
@@ -95,6 +96,7 @@ impl ProjectCommand {
         match cmd {
             "help" => ProjectCommand::Help,
             "add" => ProjectCommand::Add,
+            "remove" => ProjectCommand::Remove,
             _ => ProjectCommand::Help,
         }
     }
@@ -129,6 +131,7 @@ pub fn check(program: ProgramInfo) {
 
     match project_info.sub_command {
         ProjectCommand::Add => add(project_info),
+        ProjectCommand::Remove => remove(project_info),
         _ => {},
     };
 }
@@ -211,5 +214,28 @@ fn add(project_info: ProjectInfo) {
     let project = config::Project::create(&params.name, &params.path);
 
     config.projects.push(project);
+    config.save();
+}
+
+fn remove(project_info: ProjectInfo) {
+    let mut config = config::get();
+    let mut args = project_info.args;
+    let project_name = match args.pop() {
+        None => {
+            println!("You must enter project name to remove");
+            exit(1);
+        },
+        Some(project) => project,
+    };
+
+    let project_index = match config.projects.iter().position(|p| p.name == project_name) {
+        None => {
+            println!("Could't find a project with this name [{}]", project_name);
+            exit(1);
+        },
+        Some(index) => index,
+    };
+
+    config.projects.remove(project_index);
     config.save();
 }
