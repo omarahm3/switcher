@@ -5,17 +5,17 @@ use std::process::exit;
 #[derive(Debug)]
 pub enum CliCommand {
     Help,
-    Add,
     Config,
     Setup,
     Branch,
+    Project,
 }
 
 impl CliCommand {
     fn command(cmd: &str) -> CliCommand {
         match cmd {
             "help" => CliCommand::Help,
-            "add_project" => CliCommand::Add,
+            "project" => CliCommand::Project,
             "config" => CliCommand::Config,
             "setup" => CliCommand::Setup,
             "branch" => CliCommand::Branch,

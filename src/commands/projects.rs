@@ -12,16 +12,8 @@ struct AddProject {
 }
 
 impl AddProject {
-    fn init(program: &ProgramInfo) -> AddProject {
-        let args = &program.args;
-        let args = match args {
-            // TODO Not sure why its not entering here?! or when it should enter here?
-            None => {
-                println!("You must specify at least the name of the project");
-                exit(1);
-            },
-            Some(args) => args
-        };
+    fn init(project_info: &ProjectInfo) -> AddProject {
+        let args = &project_info.args;
 
         // TODO This is needed because if the command was passed with empty arguments then it will
         // somehow escape the None arm above
@@ -36,7 +28,7 @@ impl AddProject {
         };
 
         let path = match args.get(1) {
-            None => program.cwd.clone(),
+            None => project_info.cwd.clone(),
             Some(path) => PathBuf::from(path),
         };
 
@@ -83,6 +75,62 @@ impl SyncProjectBranch {
             branch: branch.to_string(),
         }
     }
+}
+
+#[derive(Debug)]
+struct ProjectInfo {
+    sub_command: ProjectCommand,
+    args: Vec<String>,
+    cwd: PathBuf,
+}
+
+#[derive(Debug)]
+enum ProjectCommand {
+    Add,
+    Help,
+}
+
+impl ProjectCommand {
+    fn command(cmd: &str) -> ProjectCommand {
+        match cmd {
+            "help" => ProjectCommand::Help,
+            "add" => ProjectCommand::Add,
+            _ => ProjectCommand::Help,
+        }
+    }
+}
+
+pub fn check(program: ProgramInfo) {
+    let args = match program.args {
+        None => {
+            println!("You must specify a sub-command");
+            exit(1);
+        },
+        Some(args) => args,
+    };
+
+    let mut options = args.iter();
+    let sub_command = match options.next() {
+        None => {
+            println!("You must specify a sub-command");
+            exit(1);
+        },
+        Some(sub_command) => sub_command,
+    }.as_str();
+    let sub_command = ProjectCommand::command(sub_command);
+
+    let args = options.as_slice();
+
+    let project_info = ProjectInfo {
+        sub_command,
+        args: args.to_vec(),
+        cwd: program.cwd,
+    };
+
+    match project_info.sub_command {
+        ProjectCommand::Add => add(project_info),
+        _ => {},
+    };
 }
 
 pub fn sync_projects(program: ProgramInfo) {
@@ -151,9 +199,9 @@ fn get_selected_repositories(repositories: Vec<PathBuf>) -> Vec<PathBuf> {
     selected_repos
 }
 
-pub fn add(program: ProgramInfo) {
+fn add(project_info: ProjectInfo) {
     let mut config = config::get();
-    let params = AddProject::init(&program);
+    let params = AddProject::init(&project_info);
 
     if config.projects.iter().any(|elem| elem.name == params.name) {
         println!("Project with name [{}] already exists, please change it", params.name);
