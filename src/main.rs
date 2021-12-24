@@ -25,6 +25,6 @@ fn main() {
         CliCommand::Add => projects::add(program_info),
         CliCommand::Setup => projects::setup(program_info),
         CliCommand::Branch => projects::sync_projects(program_info),
-        CliCommand::Config => config::print(),
+        CliCommand::Config => config::print(program_info),
     }
 }

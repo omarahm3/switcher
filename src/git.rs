@@ -27,6 +27,18 @@ pub fn get_repositories(path: &PathBuf) -> Vec<PathBuf> {
     repositories
 }
 
+pub fn git_current_branch(repository: PathBuf) -> String {
+    let command_string = "git rev-parse --abbrev-ref HEAD";
+    let (command, args) = build_command(command_string);
+    let (error, output) = run_command(command, args, repository);
+
+    if !error.is_empty() {
+        println!("Error getting current branch of repository: [{}]", error);
+    }
+
+    output
+}
+
 pub fn sync_repositories_to_branch(repositories: &Vec<PathBuf>, branch: &String) {
     for repository in repositories {
         let repo_name = repository.file_name().unwrap().to_str().unwrap();
@@ -52,7 +64,7 @@ fn build_command(command: &str) -> (String, Vec<&str>) {
     (command.to_string(), args.to_vec())
 }
 
-fn run_command(command: String, args: Vec<&str>, cwd: PathBuf) {
+fn run_command(command: String, args: Vec<&str>, cwd: PathBuf) -> (String, String) {
     let command = match Command::new(command)
         .current_dir(cwd)
         .args(args)
@@ -61,15 +73,12 @@ fn run_command(command: String, args: Vec<&str>, cwd: PathBuf) {
             Ok(cmd) => cmd,
         };
 
-    if !command.status.success() {
-        let error = String::from_utf8_lossy(&command.stderr);
-        let error = error.trim();
-        let output = String::from_utf8_lossy(&command.stdout);
-        let output = output.trim();
+    let error = String::from_utf8_lossy(&command.stderr);
+    let error = error.trim().to_string();
+    let output = String::from_utf8_lossy(&command.stdout);
+    let output = output.trim().to_string();
 
-        println!("\tOutput> {}", output);
-        println!("\tError> {}", error);
-    }
+    (error, output)
 }
 
 fn git_checkout(repository: PathBuf, branch: String) {

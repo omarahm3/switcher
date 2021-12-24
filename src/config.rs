@@ -2,6 +2,8 @@ use std::path::PathBuf;
 use std::fs;
 use serde::{Serialize, Deserialize};
 use std::io::prelude::*;
+use crate::cli::ProgramInfo;
+use crate::git::git_current_branch;
 
 const CONFIG_INIT: &str = r#"
 {
@@ -68,13 +70,21 @@ pub fn get() -> Config {
     read_config_file(config_path)
 }
 
-pub fn print() {
+pub fn print(program: ProgramInfo) {
     let config = get();
+    let args = match program.args {
+        None => Vec::new(),
+        Some(args) => args,
+    };
     let projects = config.projects;
     let config_path = get_config_path();
     let path = match config_path.to_str() {
         None => panic!("Cannot get config path"),
         Some(path) => path,
+    };
+    let detail = match args.iter().find(|&arg| arg == "--detail" || arg == "-d") {
+        None => false,
+        Some(_) => true,
     };
 
     println!("Config path: [{}]", path);
@@ -97,7 +107,16 @@ pub fn print() {
                 None => panic!("Cannot convert repository name to string"),
                 Some(name) => name,
             };
-            println!("\t\t\t\t{}", name);
+
+            print!("\t\t\t\t{}", name);
+
+            if detail == true {
+                let current_branch = git_current_branch(repository.to_path_buf());
+                // TODO properly handle the perfect alignment of the tabs
+                println!("  \t\t-> {}", current_branch);
+            } else {
+                println!("");
+            }
         }
     }
 }
