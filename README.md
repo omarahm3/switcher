@@ -2,14 +2,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Twitter: omarahm3](https://img.shields.io/twitter/follow/omarahm3.svg?style=social)](https://twitter.com/omarahm3)
 
-> multi git repositories project organizer made with rust
+> Multi git repositories project organizer made with rust.
 
-### 🏠 [Homepage](https://github.com/omarahm3/switcher)
+This project is pretty immature, it was created so that i can learn Rust, there are other variants of this project made with other languages
+- [Fish Shell](https://github.com/omarahm3/projects-switcher)
+
+However this might be the main project in which i'm going to continue maintaining it.
 
 ## Install
 
 ```sh
-cargo install switcher
+wget -qcO ~/.local/bin/switcher https://github.com/omarahm3/switcher/releases/download/v0.0.1-alpha/switcher
+chmod +x ~/.local/bin/switcher
 ```
 
 ## Usage
