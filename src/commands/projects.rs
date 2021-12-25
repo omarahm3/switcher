@@ -102,6 +102,29 @@ impl ProjectCommand {
     }
 }
 
+fn projects_help() {
+    println!("
+This will let you control your projects by adding or removing them, please note that you'll need to run `switcher setup <PROJECT_NAME>` afterwards
+
+Commands:
+    add, remove
+
+Examples:
+    switcher project add example /optional/project/path # Pass project path
+    switcher project add example # project path will be then CWD
+    switcher project remove example
+");
+}
+
+fn setup_help() {
+    println!("
+This will help you setup your project by specifying a project name, and then it will let you select project's repositories
+
+Examples:
+    switcher setup example
+");
+}
+
 pub fn check(program: ProgramInfo) {
     let args = match program.args {
         None => {
@@ -113,12 +136,9 @@ pub fn check(program: ProgramInfo) {
 
     let mut options = args.iter();
     let sub_command = match options.next() {
-        None => {
-            println!("You must specify a sub-command");
-            exit(1);
-        },
+        None => "help",
         Some(sub_command) => sub_command,
-    }.as_str();
+    };
     let sub_command = ProjectCommand::command(sub_command);
 
     let args = options.as_slice();
@@ -132,7 +152,7 @@ pub fn check(program: ProgramInfo) {
     match project_info.sub_command {
         ProjectCommand::Add => add(project_info),
         ProjectCommand::Remove => remove(project_info),
-        _ => {},
+        ProjectCommand::Help => projects_help(),
     };
 }
 
@@ -154,12 +174,18 @@ pub fn setup(program: ProgramInfo) {
     let mut config = config::get();
 
     let mut args = match program.args {
-        None => panic!("You must enter project name"),
+        None => {
+            setup_help();
+            exit(1);
+        },
         Some(args) => args,
     };
 
     let project_name = match args.pop() {
-        None => panic!("Unable to get project name"),
+        None => {
+            setup_help();
+            exit(1);
+        },
         Some(name) => name,
     };
 
