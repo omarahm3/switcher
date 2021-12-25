@@ -65,13 +65,10 @@ fn build_command(command: &str) -> (String, Vec<&str>) {
 }
 
 fn run_command(command: String, args: Vec<&str>, cwd: PathBuf) -> (String, String) {
-    let command = match Command::new(command)
-        .current_dir(cwd)
-        .args(args)
-        .output() {
-            Err(err) => panic!("Error running command [{}]", err),
-            Ok(cmd) => cmd,
-        };
+    let command = match Command::new(command).current_dir(cwd).args(args).output() {
+        Err(err) => panic!("Error running command [{}]", err),
+        Ok(cmd) => cmd,
+    };
 
     let error = String::from_utf8_lossy(&command.stderr);
     let error = error.trim().to_string();
