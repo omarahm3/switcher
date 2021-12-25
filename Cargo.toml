@@ -1,7 +1,15 @@
 [package]
 name = "switcher"
-version = "0.1.0"
+description = "Multi git repositories project organizer"
+homepage = "https://github.com/omarahm3/switcher"
+repository = "https://github.com/omarahm3/switcher"
+readme = "README.md"
+license = "MIT"
+keywords = ["microservices", "git", "multi-projects"]
+version = "0.0.1-alpha"
+authors = ["Omar Ahmed <me@mrg.sh>"]
 edition = "2021"
+rust-version ="1.57"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
