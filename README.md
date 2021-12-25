@@ -16,6 +16,14 @@ wget -qcO ~/.local/bin/switcher https://github.com/omarahm3/switcher/releases/do
 chmod +x ~/.local/bin/switcher
 ```
 
+## Build
+
+```sh
+git clone git@github.com:omarahm3/switcher.git
+cd switcher
+cargo build --release --all-features
+```
+
 ## Usage
 
 ```sh
