@@ -1,5 +1,5 @@
-use std::path::PathBuf;
 use std::env;
+use std::path::PathBuf;
 use std::process::exit;
 
 #[derive(Debug)]
@@ -35,7 +35,7 @@ pub fn get_program_info() -> ProgramInfo {
     let mut args: Vec<String> = env::args().skip(1).collect();
     let cwd = match env::current_dir() {
         Ok(path) => path,
-        Err(_) => panic!("Can't get current working directory")
+        Err(_) => panic!("Can't get current working directory"),
     };
 
     if args.len() == 0 {

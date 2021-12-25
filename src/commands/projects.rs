@@ -1,14 +1,14 @@
-use std::io::{Write, stdout, stdin};
-use std::path::PathBuf;
-use std::process::exit;
 use crate::cli::ProgramInfo;
 use crate::config;
 use crate::git;
+use std::io::{stdin, stdout, Write};
+use std::path::PathBuf;
+use std::process::exit;
 
 #[derive(Debug)]
 struct AddProject {
     name: String,
-    path: PathBuf
+    path: PathBuf,
 }
 
 impl AddProject {
@@ -51,8 +51,8 @@ impl SyncProjectBranch {
             None => {
                 println!("You must specify at least the name of the project");
                 exit(1);
-            },
-            Some(args) => args
+            }
+            Some(args) => args,
         };
 
         if args.len() == 0 {
@@ -130,7 +130,7 @@ pub fn check(program: ProgramInfo) {
         None => {
             println!("You must specify a sub-command");
             exit(1);
-        },
+        }
         Some(args) => args,
     };
 
@@ -161,9 +161,12 @@ pub fn sync_projects(program: ProgramInfo) {
     let params = SyncProjectBranch::init(&program);
     let project = match config.get_project(&params.name) {
         None => {
-            println!("Unable to find project [{}] please consider runnnig 'add_project {} <|PATH>'", &params.name, &params.name);
+            println!(
+                "Unable to find project [{}] please consider runnnig 'add_project {} <|PATH>'",
+                &params.name, &params.name
+            );
             exit(1);
-        },
+        }
         Some(project) => project,
     };
     let repositories = &project.repositories;
@@ -177,7 +180,7 @@ pub fn setup(program: ProgramInfo) {
         None => {
             setup_help();
             exit(1);
-        },
+        }
         Some(args) => args,
     };
 
@@ -185,15 +188,18 @@ pub fn setup(program: ProgramInfo) {
         None => {
             setup_help();
             exit(1);
-        },
+        }
         Some(name) => name,
     };
 
     let mut project = match config.get_project(&project_name) {
         None => {
-            println!("Unable to find project [{}] please consider runnnig 'add_project {} <|PATH>'", &project_name, &project_name);
+            println!(
+                "Unable to find project [{}] please consider runnnig 'add_project {} <|PATH>'",
+                &project_name, &project_name
+            );
             exit(1);
-        },
+        }
         Some(project) => project,
     };
 
@@ -208,7 +214,10 @@ fn get_selected_repositories(repositories: Vec<PathBuf>) -> Vec<PathBuf> {
     let mut selected_repos: Vec<PathBuf> = Vec::new();
 
     for repository in repositories.iter() {
-        print!("Add repository ({})? enter 'no' to ignore> ", repository.display());
+        print!(
+            "Add repository ({})? enter 'no' to ignore> ",
+            repository.display()
+        );
 
         stdout().flush().expect("Error flushing stdout");
 
@@ -233,7 +242,10 @@ fn add(project_info: ProjectInfo) {
     let params = AddProject::init(&project_info);
 
     if config.projects.iter().any(|elem| elem.name == params.name) {
-        println!("Project with name [{}] already exists, please change it", params.name);
+        println!(
+            "Project with name [{}] already exists, please change it",
+            params.name
+        );
         exit(1);
     }
 
@@ -250,7 +262,7 @@ fn remove(project_info: ProjectInfo) {
         None => {
             println!("You must enter project name to remove");
             exit(1);
-        },
+        }
         Some(project) => project,
     };
 
@@ -258,7 +270,7 @@ fn remove(project_info: ProjectInfo) {
         None => {
             println!("Could't find a project with this name [{}]", project_name);
             exit(1);
-        },
+        }
         Some(index) => index,
     };
 

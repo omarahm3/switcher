@@ -1,9 +1,9 @@
-use std::path::PathBuf;
-use std::fs;
-use serde::{Serialize, Deserialize};
-use std::io::prelude::*;
 use crate::cli::ProgramInfo;
 use crate::git::git_current_branch;
+use serde::{Deserialize, Serialize};
+use std::fs;
+use std::io::prelude::*;
+use std::path::PathBuf;
 
 const CONFIG_INIT: &str = r#"
 {
@@ -15,7 +15,7 @@ const CONFIG_INIT: &str = r#"
 pub struct Project {
     pub name: String,
     pub path: PathBuf,
-    pub repositories: Vec<PathBuf>
+    pub repositories: Vec<PathBuf>,
 }
 
 impl Project {
@@ -23,14 +23,14 @@ impl Project {
         Project {
             name: name.to_string(),
             path: path.to_path_buf(),
-            repositories: Vec::new()
+            repositories: Vec::new(),
         }
     }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
-    pub projects: Vec<Project>
+    pub projects: Vec<Project>,
 }
 
 impl Config {
@@ -40,13 +40,10 @@ impl Config {
             Ok(content) => content,
         };
         let path = get_config_path();
-        let mut file = match fs::OpenOptions::new()
-            .write(true)
-            .truncate(true)
-            .open(path) {
-                Err(err) => panic!("Error occurred while opening config file: {}", err),
-                Ok(file) => file,
-            };
+        let mut file = match fs::OpenOptions::new().write(true).truncate(true).open(path) {
+            Err(err) => panic!("Error occurred while opening config file: {}", err),
+            Ok(file) => file,
+        };
 
         match file.write_all(content.as_bytes()) {
             Err(err) => panic!("Error writing to config file: [{}]", err),
@@ -55,7 +52,9 @@ impl Config {
     }
 
     pub fn get_project(&mut self, project_name: &String) -> Option<&mut Project> {
-        self.projects.iter_mut().find(|project| project.name == *project_name)
+        self.projects
+            .iter_mut()
+            .find(|project| project.name == *project_name)
     }
 }
 
@@ -96,7 +95,7 @@ pub fn print(program: ProgramInfo) {
         };
         println!("\t{}\t\t{}", project.name, path);
         println!("\tRepositories");
-        
+
         for repository in project.repositories.iter() {
             let path = repository.clone();
             let filename = match path.file_name() {
@@ -127,7 +126,8 @@ fn read_config_file(path: PathBuf) -> Config {
         Ok(file) => file,
     };
     let mut content = String::new();
-    file.read_to_string(&mut content).expect("Error reading config file content");
+    file.read_to_string(&mut content)
+        .expect("Error reading config file content");
 
     // This will fail here if serde can't serialize config file content to Project
     match serde_json::from_str::<Config>(&content) {
@@ -163,7 +163,10 @@ fn path_exists(path: &PathBuf) -> bool {
 fn create_config_file(path: &PathBuf) {
     // Create the actual config file
     let mut file = match fs::File::create(path) {
-        Err(err) => panic!("Something happened while trying to create config file: [{}]", err),
+        Err(err) => panic!(
+            "Something happened while trying to create config file: [{}]",
+            err
+        ),
         Ok(file) => file,
     };
 
@@ -183,9 +186,11 @@ fn create_config_directory(path: PathBuf) {
 
 fn get_config_path() -> PathBuf {
     // Building config directory projects file path
-    dirs::config_dir().map(|mut config| {
-        config.push("switcher");
-        config.push("config.json");
-        config
-    }).expect("Can't get config directory")
+    dirs::config_dir()
+        .map(|mut config| {
+            config.push("switcher");
+            config.push("config.json");
+            config
+        })
+        .expect("Can't get config directory")
 }
