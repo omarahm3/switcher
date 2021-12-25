@@ -1,0 +1,20 @@
+on: [push]
+
+name: CI
+
+jobs:
+  build_and_test:
+    name: Switcher
+    runs_on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features
