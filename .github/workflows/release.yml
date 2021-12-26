@@ -24,3 +24,6 @@ jobs:
           prerelease: true
           files: |
             target/release/switcher 
+      - uses: katyo/publish-crates@v1
+        with:
+            registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
