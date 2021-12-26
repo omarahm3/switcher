@@ -27,7 +27,6 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
-          automatic_release_tag: latest
           files: |
             target/release/switcher 
       - uses: katyo/publish-crates@v1
