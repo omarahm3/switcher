@@ -46,9 +46,8 @@ impl Config {
             Ok(file) => file,
         };
 
-        match file.write_all(content.as_bytes()) {
-            Err(err) => panic!("Error writing to config file: [{}]", err),
-            Ok(_) => {}
+        if let Err(err) = file.write_all(content.as_bytes()) {
+            panic!("Error writing to config file: [{}]", err)
         }
     }
 
@@ -82,10 +81,7 @@ pub fn print(program: ProgramInfo) {
         None => panic!("Cannot get config path"),
         Some(path) => path,
     };
-    let detail = match args.iter().find(|&arg| arg == "--detail" || arg == "-d") {
-        None => false,
-        Some(_) => true,
-    };
+    let detail = args.iter().find(|&arg| arg == "--detail" || arg == "-d").is_some();
 
     println!("Config path: [{}]", path);
     println!("Projects:");
