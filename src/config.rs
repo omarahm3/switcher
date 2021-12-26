@@ -81,7 +81,7 @@ pub fn print(program: ProgramInfo) {
         None => panic!("Cannot get config path"),
         Some(path) => path,
     };
-    let detail = args.iter().find(|&arg| arg == "--detail" || arg == "-d").is_some();
+    let detail = args.iter().any(|arg| arg == "--detail" || arg == "-d");
 
     println!("Config path: [{}]", path);
     println!("Projects:");
@@ -106,7 +106,7 @@ pub fn print(program: ProgramInfo) {
 
             print!("\t\t\t\t{}", name);
 
-            if detail == true {
+            if detail {
                 let current_branch = git_current_branch(repository.to_path_buf());
                 // TODO properly handle the perfect alignment of the tabs
                 println!("  \t\t-> {}", current_branch);
