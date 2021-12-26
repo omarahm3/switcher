@@ -1,5 +1,7 @@
 # Welcome to switcher 👋
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Cargo: Switcher](https://img.shields.io/crates/v/switcher)](https://crates.io/crates/switcher)
+[![Github: CI](https://img.shields.io/github/workflow/status/omarahm3/switcher/CI/master)](https://github.com/omarahm3/switcher/actions)
 [![Twitter: omarahm3](https://img.shields.io/twitter/follow/omarahm3.svg?style=social)](https://twitter.com/omarahm3)
 
 > Multi git repositories project organizer made with rust.
