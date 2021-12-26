@@ -26,6 +26,12 @@ Or install it as a cargo crate
 cargo install switcher --version <LATEST_VERSION>
 ```
 
+If you just don't know the version to use
+
+```sh
+cargo install switcher --version (cargo search switcher --limit 1 | head -n 1 | cut -d ' ' -f 3 | sed -e 's/"//g')
+```
+
 ## Build
 
 ```sh
