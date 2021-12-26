@@ -114,7 +114,7 @@ pub fn print(program: ProgramInfo) {
                 // TODO properly handle the perfect alignment of the tabs
                 println!("  \t\t-> {}", current_branch);
             } else {
-                println!("");
+                println!();
             }
         }
     }
