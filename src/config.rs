@@ -174,9 +174,8 @@ fn create_config_file(path: &Path) {
 }
 
 fn create_config_directory(path: PathBuf) {
-    match fs::DirBuilder::new().recursive(true).create(path) {
-        Err(err) => panic!("Error creating config directory: [{}]", err),
-        Ok(_) => {}
+    if let Err(err) = fs::DirBuilder::new().recursive(true).create(path) {
+        panic!("Error creating config directory: [{}]", err);
     }
 }
 

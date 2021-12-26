@@ -40,7 +40,7 @@ pub fn git_current_branch(repository: PathBuf) -> String {
     output
 }
 
-pub fn sync_repositories_to_branch(repositories: &Vec<PathBuf>, branch: &str) {
+pub fn sync_repositories_to_branch(repositories: &[PathBuf], branch: &str) {
     for repository in repositories {
         let repo_name = repository.file_name().unwrap().to_str().unwrap();
 
@@ -59,7 +59,7 @@ pub fn sync_repositories_to_branch(repositories: &Vec<PathBuf>, branch: &str) {
 }
 
 fn build_command(command: &str) -> (String, Vec<&str>) {
-    let mut parts = command.trim().split(" ").collect::<Vec<&str>>();
+    let mut parts = command.trim().split(' ').collect::<Vec<&str>>();
     let command = &parts.remove(0);
     let args = &parts;
     (command.to_string(), args.to_vec())
