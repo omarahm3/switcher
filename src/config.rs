@@ -168,9 +168,8 @@ fn create_config_file(path: &Path) {
     };
 
     // Write an empty object to it
-    match file.write_all(CONFIG_INIT.as_bytes()) {
-        Err(err) => panic!("Error writing to config file: [{}]", err),
-        Ok(_) => {}
+    if let Err(err) = file.write_all(CONFIG_INIT.as_bytes()) {
+        panic!("Error writing to config file: [{}]", err);
     }
 }
 
