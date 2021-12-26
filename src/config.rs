@@ -147,9 +147,9 @@ fn handle_config_file(path: &Path) {
     };
 
     // Check config file
-    if !path_exists(&path) {
+    if !path_exists(path) {
         println!("Config doesn't exist, creating file");
-        create_config_file(&path);
+        create_config_file(path);
     }
 }
 
