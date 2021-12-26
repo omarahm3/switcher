@@ -7,13 +7,6 @@ use crate::cli::get_program_info;
 use crate::cli::CliCommand;
 use crate::commands::projects;
 
-/**
- * switcher project add <PROJECT_NAME> <|PROJECT_PATH>
- * switcher config <|detail|d>
- * switcher setup <PROJECT_NAME>
- * switcher branch <PROJECT_NAME> <BRANCH>
- */
-
 fn print_help() {
     println!("
 Switcher is a simple organizer for projects with multi-repositories gives you the ability to do bulk git actions on all of them
@@ -31,6 +24,16 @@ Examples:
 ");
 }
 
+fn print_version() {
+    const NAME: &str = env!("CARGO_PKG_NAME");
+    const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
+    const VERSION: &str = env!("CARGO_PKG_VERSION");
+    const REPOSITORY: &str = env!("CARGO_PKG_REPOSITORY");
+    println!("{} v{}
+By: {}
+Repoistory: {}", NAME, VERSION, AUTHORS, REPOSITORY);
+}
+
 fn main() {
     config::init();
 
@@ -42,5 +45,6 @@ fn main() {
         CliCommand::Branch => projects::sync_projects(program_info),
         CliCommand::Config => config::print(program_info),
         CliCommand::Project => projects::check(program_info),
+        CliCommand::Version => print_version(),
     }
 }
