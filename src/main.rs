@@ -21,6 +21,7 @@ Examples:
     switcher branch example develop
     switcher config --detail
     switcher project remove example
+    switcher version
 ");
 }
 
