@@ -38,7 +38,7 @@ pub fn get_program_info() -> ProgramInfo {
         Err(_) => panic!("Can't get current working directory"),
     };
 
-    if args.len() == 0 {
+    if args.is_empty() {
         // TODO should probably show help here
         println!("Please enter a valid command");
         exit(1);

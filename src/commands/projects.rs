@@ -17,7 +17,7 @@ impl AddProject {
 
         // TODO This is needed because if the command was passed with empty arguments then it will
         // somehow escape the None arm above
-        if args.len() == 0 {
+        if args.is_empty() {
             println!("You must specify at least the name of the project");
             exit(1);
         }
@@ -55,7 +55,7 @@ impl SyncProjectBranch {
             Some(args) => args,
         };
 
-        if args.len() == 0 {
+        if args.is_empty() {
             println!("You must specify project name and branch");
             exit(1);
         }

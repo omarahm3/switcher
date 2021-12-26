@@ -3,6 +3,7 @@ use crate::git::git_current_branch;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::prelude::*;
+use std::path::Path;
 use std::path::PathBuf;
 
 const CONFIG_INIT: &str = r#"
@@ -19,7 +20,7 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn create(name: &String, path: &PathBuf) -> Project {
+    pub fn create(name: &str, path: &Path) -> Project {
         Project {
             name: name.to_string(),
             path: path.to_path_buf(),
@@ -45,13 +46,12 @@ impl Config {
             Ok(file) => file,
         };
 
-        match file.write_all(content.as_bytes()) {
-            Err(err) => panic!("Error writing to config file: [{}]", err),
-            Ok(_) => {}
+        if let Err(err) = file.write_all(content.as_bytes()) {
+            panic!("Error writing to config file: [{}]", err)
         }
     }
 
-    pub fn get_project(&mut self, project_name: &String) -> Option<&mut Project> {
+    pub fn get_project(&mut self, project_name: &str) -> Option<&mut Project> {
         self.projects
             .iter_mut()
             .find(|project| project.name == *project_name)
@@ -81,10 +81,7 @@ pub fn print(program: ProgramInfo) {
         None => panic!("Cannot get config path"),
         Some(path) => path,
     };
-    let detail = match args.iter().find(|&arg| arg == "--detail" || arg == "-d") {
-        None => false,
-        Some(_) => true,
-    };
+    let detail = args.iter().any(|arg| arg == "--detail" || arg == "-d");
 
     println!("Config path: [{}]", path);
     println!("Projects:");
@@ -109,12 +106,12 @@ pub fn print(program: ProgramInfo) {
 
             print!("\t\t\t\t{}", name);
 
-            if detail == true {
+            if detail {
                 let current_branch = git_current_branch(repository.to_path_buf());
                 // TODO properly handle the perfect alignment of the tabs
                 println!("  \t\t-> {}", current_branch);
             } else {
-                println!("");
+                println!();
             }
         }
     }
@@ -136,7 +133,7 @@ fn read_config_file(path: PathBuf) -> Config {
     }
 }
 
-fn handle_config_file(path: &PathBuf) {
+fn handle_config_file(path: &Path) {
     // Get parent directory path
     let parent_dir = match path.parent() {
         None => panic!("Error getting parent directory from path"),
@@ -150,17 +147,17 @@ fn handle_config_file(path: &PathBuf) {
     };
 
     // Check config file
-    if !path_exists(&path) {
+    if !path_exists(path) {
         println!("Config doesn't exist, creating file");
-        create_config_file(&path);
+        create_config_file(path);
     }
 }
 
-fn path_exists(path: &PathBuf) -> bool {
+fn path_exists(path: &Path) -> bool {
     fs::metadata(path).is_ok()
 }
 
-fn create_config_file(path: &PathBuf) {
+fn create_config_file(path: &Path) {
     // Create the actual config file
     let mut file = match fs::File::create(path) {
         Err(err) => panic!(
@@ -171,16 +168,14 @@ fn create_config_file(path: &PathBuf) {
     };
 
     // Write an empty object to it
-    match file.write_all(CONFIG_INIT.as_bytes()) {
-        Err(err) => panic!("Error writing to config file: [{}]", err),
-        Ok(_) => {}
+    if let Err(err) = file.write_all(CONFIG_INIT.as_bytes()) {
+        panic!("Error writing to config file: [{}]", err);
     }
 }
 
 fn create_config_directory(path: PathBuf) {
-    match fs::DirBuilder::new().recursive(true).create(path) {
-        Err(err) => panic!("Error creating config directory: [{}]", err),
-        Ok(_) => {}
+    if let Err(err) = fs::DirBuilder::new().recursive(true).create(path) {
+        panic!("Error creating config directory: [{}]", err);
     }
 }
 

@@ -11,9 +11,17 @@ However this might be the main project in which i'm going to continue maintainin
 
 ## Install
 
+From releases
+
 ```sh
 wget -qcO ~/.local/bin/switcher https://github.com/omarahm3/switcher/releases/download/v0.0.1-alpha/switcher
 chmod +x ~/.local/bin/switcher
+```
+
+Or install it as a cargo crate
+
+```sh
+cargo install switcher --version 0.0.1-alpha
 ```
 
 ## Build
