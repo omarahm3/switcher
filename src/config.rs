@@ -19,7 +19,7 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn create(name: &String, path: &PathBuf) -> Project {
+    pub fn create(name: &str, path: &PathBuf) -> Project {
         Project {
             name: name.to_string(),
             path: path.to_path_buf(),
@@ -51,7 +51,7 @@ impl Config {
         }
     }
 
-    pub fn get_project(&mut self, project_name: &String) -> Option<&mut Project> {
+    pub fn get_project(&mut self, project_name: &str) -> Option<&mut Project> {
         self.projects
             .iter_mut()
             .find(|project| project.name == *project_name)

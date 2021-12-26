@@ -39,7 +39,7 @@ pub fn git_current_branch(repository: PathBuf) -> String {
     output
 }
 
-pub fn sync_repositories_to_branch(repositories: &Vec<PathBuf>, branch: &String) {
+pub fn sync_repositories_to_branch(repositories: &Vec<PathBuf>, branch: &str) {
     for repository in repositories {
         let repo_name = repository.file_name().unwrap().to_str().unwrap();
 
