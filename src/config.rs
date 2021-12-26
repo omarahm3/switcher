@@ -5,6 +5,7 @@ use std::fs;
 use std::io::prelude::*;
 use std::path::Path;
 use std::path::PathBuf;
+use colored::*;
 
 const CONFIG_INIT: &str = r#"
 {
@@ -83,15 +84,15 @@ pub fn print(program: ProgramInfo) {
     };
     let detail = args.iter().any(|arg| arg == "--detail" || arg == "-d");
 
-    println!("Config path: [{}]", path);
-    println!("Projects:");
+    println!("{}: [{}]", "Config path".bold(), path);
+    println!("{}:", "Projects".bold());
     for project in projects.iter() {
         let path = match project.path.to_str() {
             None => "N/A",
             Some(path) => path,
         };
-        println!("\t{}\t\t{}", project.name, path);
-        println!("\tRepositories");
+        println!("\t{}\t\t{}", project.name.underline(), path);
+        println!("\t{}", "Repositories".underline());
 
         for repository in project.repositories.iter() {
             let path = repository.clone();
@@ -109,7 +110,7 @@ pub fn print(program: ProgramInfo) {
             if detail {
                 let current_branch = git_current_branch(repository.to_path_buf());
                 // TODO properly handle the perfect alignment of the tabs
-                println!("  \t\t-> {}", current_branch);
+                println!(" ({})", current_branch.yellow());
             } else {
                 println!();
             }
