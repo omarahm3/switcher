@@ -1,8 +1,9 @@
 use std::fs;
 use std::path::PathBuf;
+use std::path::Path;
 use std::process::Command;
 
-pub fn get_repositories(path: &PathBuf) -> Vec<PathBuf> {
+pub fn get_repositories(path: &Path) -> Vec<PathBuf> {
     let mut repositories: Vec<PathBuf> = Vec::new();
 
     // TODO Must make sure that projects paths are directory the moment user enters them

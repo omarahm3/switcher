@@ -3,6 +3,7 @@ use crate::git::git_current_branch;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::prelude::*;
+use std::path::Path;
 use std::path::PathBuf;
 
 const CONFIG_INIT: &str = r#"
@@ -19,7 +20,7 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn create(name: &str, path: &PathBuf) -> Project {
+    pub fn create(name: &str, path: &Path) -> Project {
         Project {
             name: name.to_string(),
             path: path.to_path_buf(),
@@ -136,7 +137,7 @@ fn read_config_file(path: PathBuf) -> Config {
     }
 }
 
-fn handle_config_file(path: &PathBuf) {
+fn handle_config_file(path: &Path) {
     // Get parent directory path
     let parent_dir = match path.parent() {
         None => panic!("Error getting parent directory from path"),
@@ -156,11 +157,11 @@ fn handle_config_file(path: &PathBuf) {
     }
 }
 
-fn path_exists(path: &PathBuf) -> bool {
+fn path_exists(path: &Path) -> bool {
     fs::metadata(path).is_ok()
 }
 
-fn create_config_file(path: &PathBuf) {
+fn create_config_file(path: &Path) {
     // Create the actual config file
     let mut file = match fs::File::create(path) {
         Err(err) => panic!(
