@@ -8,6 +8,7 @@
 
 This project is pretty immature, it was created so that i can learn Rust, there are other variants of this project made with other languages
 - [Fish Shell](https://github.com/omarahm3/projects-switcher)
+- [Node Switcher](https://github.com/omarahm3/node-switcher)
 
 However this might be the main project in which i'm going to continue maintaining it.
 
