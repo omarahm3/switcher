@@ -54,6 +54,9 @@ pub fn sync_repositories_to_branch(repositories: &[PathBuf], branch: &str) {
 
         println!("\t!> Running git checkout {}", &branch);
         git_checkout(repository.to_path_buf(), branch.to_string());
+
+        println!("\t!> Running git pull");
+        git_pull(repository.to_path_buf());
         println!("\n");
     }
 }
@@ -82,6 +85,11 @@ fn run_command(command: String, args: Vec<&str>, cwd: PathBuf) -> (String, Strin
 fn git_checkout(repository: PathBuf, branch: String) {
     let command_string = format!("git checkout {}", branch);
     let (command, args) = build_command(&command_string);
+    run_command(command, args, repository);
+}
+
+fn git_pull(repository: PathBuf) {
+    let (command, args) = build_command("git pull");
     run_command(command, args, repository);
 }
 
