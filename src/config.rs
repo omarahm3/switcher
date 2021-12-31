@@ -1,11 +1,12 @@
 use crate::cli::ProgramInfo;
 use crate::git::git_current_branch;
+use colored::*;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::prelude::*;
 use std::path::Path;
 use std::path::PathBuf;
-use colored::*;
+use std::process::exit;
 
 const CONFIG_INIT: &str = r#"
 {
@@ -27,6 +28,23 @@ impl Project {
             path: path.to_path_buf(),
             repositories: Vec::new(),
         }
+    }
+
+    pub fn get_repository_by_name(&self, name: &str) -> Option<PathBuf> {
+        for repository in &self.repositories {
+            let repo = match repository.to_str() {
+                Some(repo) => repo,
+                None => {
+                    println!("Error converting path to string");
+                    exit(1);
+                }
+            };
+
+            if repo.contains(name) {
+                return Some(repository.to_path_buf());
+            }
+        }
+        None
     }
 }
 

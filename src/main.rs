@@ -19,6 +19,7 @@ Examples:
     switcher project add example # project path will be then CWD
     switcher setup example
     switcher branch example develop
+    switcher feature ./path-to-feature-file.json
     switcher config --detail
     switcher project remove example
     switcher version
@@ -50,5 +51,6 @@ fn main() {
         CliCommand::Config => config::print(program_info),
         CliCommand::Project => projects::check(program_info),
         CliCommand::Version => print_version(),
+        CliCommand::Feature => projects::sync_feature(program_info),
     }
 }

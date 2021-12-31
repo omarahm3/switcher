@@ -1,9 +1,12 @@
+use super::types::FeatureConfig;
 use crate::cli::ProgramInfo;
 use crate::commands::types::{AddProject, ProjectCommand, ProjectInfo, SyncProjectBranch};
 use crate::config;
 use crate::git;
+use std::fs;
+use std::io::prelude::*;
 use std::io::{stdin, stdout, Write};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::exit;
 
 fn projects_help() {
@@ -27,6 +30,58 @@ This will help you setup your project by specifying a project name, and then it 
 Examples:
     switcher setup example
 ");
+}
+
+pub fn sync_feature(program: ProgramInfo) {
+    let args = match program.args {
+        None => {
+            println!("You must specify a sub-command");
+            exit(1);
+        }
+        Some(args) => args,
+    };
+
+    let feature_file = match args.first() {
+        Some(arg) => arg,
+        None => {
+            println!("You must specify a sub-command");
+            exit(1);
+        }
+    };
+
+    let file_path = Path::new(&feature_file);
+
+    if !file_path.exists() {
+        println!(
+            "Please enter a valid path, since this path [{}] does not exist",
+            feature_file
+        );
+        exit(1);
+    }
+
+    let feature_config = read_feature_file(file_path);
+    let mut config = config::get();
+    let project = match config.get_project(&feature_config.project) {
+        Some(project) => project,
+        None => {
+            println!("Cannot find project with name: [{}] please make sure that you added it (run 'switcher config -d' to make sure)", feature_config.project);
+            exit(1);
+        }
+    };
+
+    for feature in feature_config.feature_specs {
+        let repository = match project.get_repository_by_name(&feature.repository) {
+            Some(repository) => repository,
+            None => {
+                println!(
+                    "Cannot find repository with this name [{}]",
+                    feature.repository
+                );
+                exit(1);
+            }
+        };
+        git::sync_repository_to_branch(repository, &feature.branch);
+    }
 }
 
 pub fn check(program: ProgramInfo) {
@@ -180,4 +235,22 @@ fn remove(project_info: ProjectInfo) {
 
     config.projects.remove(project_index);
     config.save();
+}
+
+fn read_feature_file(path: &Path) -> FeatureConfig {
+    let mut file = match fs::File::open(path) {
+        Err(err) => panic!("Error reading config file [{}]", err),
+        Ok(file) => file,
+    };
+
+    let mut content = String::new();
+
+    file.read_to_string(&mut content)
+        .expect("Error reading config file content");
+
+    // This will fail here if serde can't serialize config file content to Project
+    match serde_json::from_str::<FeatureConfig>(&content) {
+        Err(err) => panic!("Error serializing config file: [{}]", err),
+        Ok(data) => data,
+    }
 }

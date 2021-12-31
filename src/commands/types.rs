@@ -1,4 +1,5 @@
 use crate::cli::ProgramInfo;
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::exit;
 
@@ -97,4 +98,16 @@ impl ProjectCommand {
             _ => ProjectCommand::Help,
         }
     }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Feature {
+    pub repository: String,
+    pub branch: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct FeatureConfig {
+    pub project: String,
+    pub feature_specs: Vec<Feature>,
 }
