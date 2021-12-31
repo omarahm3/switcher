@@ -10,6 +10,7 @@ pub enum CliCommand {
     Branch,
     Project,
     Version,
+    Feature,
 }
 
 impl CliCommand {
@@ -21,6 +22,7 @@ impl CliCommand {
             "setup" => CliCommand::Setup,
             "branch" => CliCommand::Branch,
             "version" => CliCommand::Version,
+            "feature" => CliCommand::Feature,
             _ => CliCommand::Help,
         }
     }
