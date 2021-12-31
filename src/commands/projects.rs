@@ -1,8 +1,8 @@
 use super::types::FeatureConfig;
-use crate::cli::ProgramInfo;
 use crate::commands::types::{AddProject, ProjectCommand, ProjectInfo, SyncProjectBranch};
 use crate::config;
-use crate::git;
+use crate::core::cli::ProgramInfo;
+use crate::core::git;
 use std::fs;
 use std::io::prelude::*;
 use std::io::{stdin, stdout, Write};

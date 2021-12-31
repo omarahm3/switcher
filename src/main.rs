@@ -1,11 +1,10 @@
-mod cli;
 mod commands;
-mod config;
-mod git;
+mod core;
 
-use crate::cli::get_program_info;
-use crate::cli::CliCommand;
 use crate::commands::projects;
+use crate::core::cli::get_program_info;
+use crate::core::cli::CliCommand;
+use crate::core::config;
 
 fn print_help() {
     println!("

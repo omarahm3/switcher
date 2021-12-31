@@ -1,4 +1,4 @@
-use crate::cli::ProgramInfo;
+use crate::core::cli::ProgramInfo;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::exit;
