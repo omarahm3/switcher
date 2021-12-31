@@ -1,0 +1,17 @@
+{
+  "project": "example",
+  "feature_specs": [
+    {
+      "repository": "repo_1",
+      "branch": "develop"
+    },
+    {
+      "repository": "repo_2",
+      "branch": "feat/awesome-feature"
+    },
+    {
+      "repository": "repo_3",
+      "branch": "master"
+    }
+  ]
+}
