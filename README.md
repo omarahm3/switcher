@@ -47,6 +47,27 @@ cargo build --release --all-features
 switcher help
 ```
 
+### Using feature files
+Feature files are files that describe a certain feature/bug/whatever on a specific project. You can create them in a specific format:
+
+```json
+{
+	"project": "example",
+	"feature_specs": [
+		{
+			"repository": "my_repo",
+			"branch": "fix/tricky-bug"
+		},
+		...
+	]
+}
+```
+You can check [this example file](./examples/example_feature.json) too, and once you have the file somewhere you can just pass that to switcher by running:
+```sh
+switcher feature ./path-to-feature-file.json
+```
+and it will do the rest
+
 ## Author
 
 👤 **Omar Ahmed**
