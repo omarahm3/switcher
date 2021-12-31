@@ -1,6 +1,6 @@
 use std::fs;
-use std::path::PathBuf;
 use std::path::Path;
+use std::path::PathBuf;
 use std::process::Command;
 
 pub fn get_repositories(path: &Path) -> Vec<PathBuf> {
@@ -40,24 +40,28 @@ pub fn git_current_branch(repository: PathBuf) -> String {
     output
 }
 
+pub fn sync_repository_to_branch(repository: PathBuf, branch: &str) {
+    let repo_name = repository.file_name().unwrap().to_str().unwrap();
+
+    println!("!> Syncing repository: [{}]", repo_name);
+
+    println!("\t!> Running git fetch");
+    git_fetch(repository.to_path_buf());
+
+    println!("\t!> Running git stash");
+    git_stash(repository.to_path_buf());
+
+    println!("\t!> Running git checkout {}", &branch);
+    git_checkout(repository.to_path_buf(), branch.to_string());
+
+    println!("\t!> Running git pull");
+    git_pull(repository.to_path_buf());
+    println!("\n");
+}
+
 pub fn sync_repositories_to_branch(repositories: &[PathBuf], branch: &str) {
     for repository in repositories {
-        let repo_name = repository.file_name().unwrap().to_str().unwrap();
-
-        println!("!> Syncing repository: [{}]", repo_name);
-
-        println!("\t!> Running git fetch");
-        git_fetch(repository.to_path_buf());
-
-        println!("\t!> Running git stash");
-        git_stash(repository.to_path_buf());
-
-        println!("\t!> Running git checkout {}", &branch);
-        git_checkout(repository.to_path_buf(), branch.to_string());
-
-        println!("\t!> Running git pull");
-        git_pull(repository.to_path_buf());
-        println!("\n");
+        sync_repository_to_branch(repository.to_path_buf(), branch)
     }
 }
 
