@@ -1,3 +1,4 @@
+pub mod all;
 pub mod help;
 pub mod projects;
 pub mod types;
