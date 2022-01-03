@@ -126,7 +126,7 @@ pub fn print(program: ProgramInfo) {
             print!("\t\t\t\t{}", name);
 
             if detail {
-                let current_branch = git_current_branch(repository.to_path_buf());
+                let current_branch = git_current_branch(repository);
                 // TODO properly handle the perfect alignment of the tabs
                 println!(" ({})", current_branch.yellow());
             } else {
