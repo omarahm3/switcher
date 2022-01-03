@@ -29,7 +29,7 @@ pub fn get_repositories(path: &Path) -> Vec<PathBuf> {
     repositories
 }
 
-pub fn git_current_branch(repository: PathBuf) -> String {
+pub fn git_current_branch(repository: &Path) -> String {
     let command_string = "git rev-parse --abbrev-ref HEAD";
     let (command, args) = build_command(command_string);
     let (error, output) = run_command(command, args, repository);
@@ -47,7 +47,7 @@ pub fn sync_repository_to_branch(repository: PathBuf, branch: &str) {
     println!("!> Syncing repository: [{}]", repo_name);
 
     println!("\t!> Running git fetch");
-    git_fetch(repository.to_path_buf());
+    git_fetch(&repository);
 
     let should_stash = git_has_changes(&repository);
 
@@ -57,14 +57,14 @@ pub fn sync_repository_to_branch(repository: PathBuf, branch: &str) {
     }
 
     println!("\t!> Running git checkout {}", &branch);
-    let (err, _) = git_checkout(repository.to_path_buf(), branch.to_string());
+    let (err, _) = git_checkout(&repository, branch.to_string());
 
     if !err.is_empty() && err.contains("did not match any file(s) known to git") {
         println!("\t{}", "!!> Branch does not exist on this repository".red());
     }
 
     println!("\t!> Running git pull");
-    let (err, _) = git_pull(repository.to_path_buf());
+    let (err, _) = git_pull(&repository);
 
     if !err.is_empty() && err.contains("but no such ref was fetched") {
         println!(
@@ -90,7 +90,7 @@ fn build_command(command: &str) -> (String, Vec<&str>) {
     (command.to_string(), args.to_vec())
 }
 
-fn run_command(command: String, args: Vec<&str>, cwd: PathBuf) -> (String, String) {
+fn run_command(command: String, args: Vec<&str>, cwd: &Path) -> (String, String) {
     let command = match Command::new(command).current_dir(cwd).args(args).output() {
         Err(err) => panic!("Error running command [{}]", err),
         Ok(cmd) => cmd,
@@ -104,18 +104,18 @@ fn run_command(command: String, args: Vec<&str>, cwd: PathBuf) -> (String, Strin
     (error, output)
 }
 
-fn git_checkout(repository: PathBuf, branch: String) -> (String, String) {
+fn git_checkout(repository: &Path, branch: String) -> (String, String) {
     let command_string = format!("git checkout {}", branch);
     let (command, args) = build_command(&command_string);
     run_command(command, args, repository)
 }
 
-fn git_pull(repository: PathBuf) -> (String, String) {
+fn git_pull(repository: &Path) -> (String, String) {
     let (command, args) = build_command("git pull");
     run_command(command, args, repository)
 }
 
-fn git_fetch(repository: PathBuf) -> (String, String) {
+fn git_fetch(repository: &Path) -> (String, String) {
     let command_string = "git fetch";
     let (command, args) = build_command(command_string);
     run_command(command, args, repository)
@@ -124,13 +124,13 @@ fn git_fetch(repository: PathBuf) -> (String, String) {
 fn git_stash(repository: &Path) -> (String, String) {
     let command_string = "git stash save 'switcher:: changes'";
     let (command, args) = build_command(command_string);
-    run_command(command, args, repository.to_path_buf())
+    run_command(command, args, repository)
 }
 
 fn git_has_changes(repository: &Path) -> bool {
     let command_string = "git status -s";
     let (command, args) = build_command(command_string);
-    let (_, output) = run_command(command, args, repository.to_path_buf());
+    let (_, output) = run_command(command, args, repository);
 
     !output.is_empty()
 }
