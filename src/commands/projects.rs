@@ -121,7 +121,7 @@ pub fn sync_projects(program: ProgramInfo) {
     let project = match config.get_project(&params.name) {
         None => {
             println!(
-                "Unable to find project [{}] please consider runnnig 'add_project {} <|PATH>'",
+                "Unable to find project [{}] please consider running 'add_project {} <|PATH>'",
                 &params.name, &params.name
             );
             exit(1);
@@ -154,7 +154,7 @@ pub fn setup(program: ProgramInfo) {
     let mut project = match config.get_project(&project_name) {
         None => {
             println!(
-                "Unable to find project [{}] please consider runnnig 'add_project {} <|PATH>'",
+                "Unable to find project [{}] please consider running 'add_project {} <|PATH>'",
                 &project_name, &project_name
             );
             exit(1);

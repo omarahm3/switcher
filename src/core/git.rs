@@ -90,7 +90,7 @@ fn build_command(command: &str) -> (String, Vec<&str>) {
     (command.to_string(), args.to_vec())
 }
 
-fn run_command(command: String, args: Vec<&str>, cwd: &Path) -> (String, String) {
+pub fn run_command(command: String, args: Vec<&str>, cwd: &Path) -> (String, String) {
     let command = match Command::new(command).current_dir(cwd).args(args).output() {
         Err(err) => panic!("Error running command [{}]", err),
         Ok(cmd) => cmd,
