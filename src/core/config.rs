@@ -1,5 +1,5 @@
-use crate::cli::ProgramInfo;
-use crate::git::git_current_branch;
+use crate::core::cli::ProgramInfo;
+use crate::core::git::git_current_branch;
 use colored::*;
 use serde::{Deserialize, Serialize};
 use std::fs;
